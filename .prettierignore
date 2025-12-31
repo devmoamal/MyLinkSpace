@@ -1,0 +1,7 @@
+# Files
+bun.lock
+package-lock.json
+
+# Folders
+node_modules/
+dist/
