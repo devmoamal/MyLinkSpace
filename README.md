@@ -11,8 +11,9 @@ bun run dev
 
 ## Technologies
 
-- **Typescript**
+- **bruno**: API Client tester
 
+- **Typescript**
 - **Bun**
 - **Hono**
 - **Vite**
