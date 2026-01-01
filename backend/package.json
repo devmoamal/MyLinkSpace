@@ -6,7 +6,10 @@
   "scripts": {
     "start": "bun run src/index.ts",
     "dev": "bun --watch src/index.ts",
-    "test": "bun test"
+    "test": "bun test",
+    "db:generate": "bunx drizzle-kit generate --config libs/drizzle/drizzle.config.ts",
+    "db:migrate": "bunx drizzle-kit migrate --config libs/drizzle/drizzle.config.ts",
+    "db:studio": "bunx drizzle-kit studio --config libs/drizzle/drizzle.config.ts"
   },
   "devDependencies": {
     "@types/bun": "^1.3.5",
@@ -17,11 +20,8 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@libsql/client": "^0.15.15",
     "drizzle-orm": "^0.45.1",
     "hono": "^4.11.3",
-    "pino": "^10.1.0",
-    "pino-pretty": "^13.1.3",
     "zod": "^4.2.1"
   }
 }
