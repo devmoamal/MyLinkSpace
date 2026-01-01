@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "MyLinkSpace",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
