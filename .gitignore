@@ -1,7 +1,9 @@
 # Files
 .DB_Store
 .env
+*.db
 
 # Folders
+migrations/
 dist/
 node_modules/
