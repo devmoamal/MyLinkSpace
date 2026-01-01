@@ -7,10 +7,7 @@ const envSchema = z.object({
   HOST: z.string(),
 
   // Database Configuration
-  DB_URL: z.string().default("file:database.db"),
-
-  // If using remote Turso DB
-  DB_TOKEN: z.string().optional(),
+  DATABASE_PATH: z.string().default("file:./database.db"),
 
   // Environment
   NODE_ENV: z.enum(["development", "production"]).default("development"),
