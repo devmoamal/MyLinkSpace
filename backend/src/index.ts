@@ -1,5 +1,5 @@
 import Router from "@/routes";
-import LoggerMiddleware from "@/middlewares/logger";
+import LoggerMiddleware from "@/middlewares/logger.middleware";
 import { server } from "@/server";
 
 // Hono app that start with Bun
