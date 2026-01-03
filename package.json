@@ -7,8 +7,7 @@
     "shared"
   ],
   "scripts": {
-    "postinstall": "bun run install:env",
-    "install:env": "cp backend/.env.example backend/.env",
+    "init:dev": "cp backend/.env.example backend/.env",
     "dev:backend": "bun --filter ./backend dev",
     "dev:frontend": "bun --filter ./frontend dev",
     "dev": "bun run dev:backend & bun run dev:frontend"

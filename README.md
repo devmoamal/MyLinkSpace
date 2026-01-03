@@ -5,18 +5,19 @@ Simple and lightweight self-hosted link in bio sites like
 ## Run App
 
 ```bash
-bun run install:all
+bun install
+bun run init // it initial .env file
 bun run dev
 ```
 
 ## Technologies
 
+- **Typescript**: Javascript with types
 - **bruno**: API Client tester
-
-- **Typescript**
-- **Bun**
-- **Hono**
-- **Vite**
-- **ReactJS**
-- **Tailwindcss**
-- **Zod**
+- **Bun**: Javascript runtime
+- **Hono**: Wep application framework
+- **drizzle**: ORM
+- **Vite**: Frontend building tool
+- **ReactJS**: Frontend library
+- **Tailwindcss**: CSS Framework
+- **Zod**: Typescript validation
