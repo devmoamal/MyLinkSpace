@@ -1,5 +1,5 @@
 {
-  "name": "mylinkspace",
+  "name": "@mylinkspace/frontend",
   "version": "0.0.1",
   "type": "module",
   "scripts": {
@@ -8,6 +8,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@mylinkspace/shared": "workspace:*",
     "@tailwindcss/vite": "^4.1.18",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
