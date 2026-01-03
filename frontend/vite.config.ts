@@ -7,7 +7,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": "/src",
-      "@shared/types": "/../shared/types",
     },
   },
 });
