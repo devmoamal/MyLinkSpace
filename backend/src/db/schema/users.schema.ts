@@ -7,7 +7,9 @@ export const users = sqliteTable("users", {
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
   avatar_image_url: text("avatar_image_url"),
-  is_verified: integer("is_verified", { mode: "boolean" }).default(false),
+  is_verified: integer("is_verified", { mode: "boolean" })
+    .default(false)
+    .notNull(),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .defaultNow(),
