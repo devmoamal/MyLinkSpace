@@ -1,11 +1,16 @@
 {
   "name": "mylinkspace",
   "private": true,
+  "workspaces": [
+    "backend",
+    "frontend",
+    "shared"
+  ],
   "scripts": {
+    "postinstall": "bun run install:env",
     "install:env": "cp backend/.env.example backend/.env",
-    "install:all": "bun install --cwd backend && bun install --cwd frontend && bun run install:env",
-    "dev:backend": "cd backend && bun dev index.ts",
-    "dev:frontend": "cd frontend && bun dev",
+    "dev:backend": "bun --filter ./backend dev",
+    "dev:frontend": "bun --filter ./frontend dev",
     "dev": "bun run dev:backend & bun run dev:frontend"
   }
 }
