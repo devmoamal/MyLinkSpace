@@ -1,6 +1,5 @@
 export const LINK_ICONS = [
-  // Websites
-  "Website", // As defult icon for URLs
+  "Website",
   "Github",
   "Instagram",
   "Telegram",
@@ -12,10 +11,6 @@ export const LINK_ICONS = [
   "Blog",
   "Portfolio",
   "Shop",
-
-  // Contact
-  "Email",
-  "Phone",
 ] as const;
 
 export const LINK_TYPES = ["Website", "Email", "Phone"] as const;
