@@ -30,6 +30,12 @@ export class AuthorizationError extends AppError {
   }
 }
 
+export class ServerError extends AppError {
+  constructor(message: string = "Internal server error") {
+    super(message, 500);
+  }
+}
+
 export class UnknownError extends AppError {
   constructor(message: string = "Internal server error") {
     super(message, 500);
