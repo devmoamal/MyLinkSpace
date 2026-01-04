@@ -1,19 +1,21 @@
 import { z } from "zod";
 import {
   createUserSchema,
-  emailValidation,
-  idValidation,
+  updateUserSchema,
   passwordChangeSchema,
+  idValidation,
   usernameValidation,
+  emailValidation,
 } from "./user.schema";
 
-// --- User DTOs param --- //
+// --- Params / query DTOs --- //
+
 export type UserIdDTO = z.infer<typeof idValidation>;
 export type UserUsernameDTO = z.infer<typeof usernameValidation>;
+export type EmailExistenceQuery = z.infer<typeof emailValidation>;
 
-// --- User DTOs body --- //
+// --- Body DTOs --- //
 
 export type CreateUserDTO = z.infer<typeof createUserSchema>;
-export type UpdateUserDTO = z.infer<typeof createUserSchema>;
+export type UpdateUserDTO = z.infer<typeof updateUserSchema>;
 export type PasswordChangeDTO = z.infer<typeof passwordChangeSchema>;
-export type EmailExistanceDTO = z.infer<typeof emailValidation>;
