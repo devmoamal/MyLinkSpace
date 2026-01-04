@@ -1,23 +1,18 @@
 import { db } from "@/db";
 import { users } from "@/db/schema/users.schema";
 import type {
-  CreateUserDTO,
-  PublicUser,
-  UpdateUserDTO,
-  UserEmail,
-  UserId,
-  UserUsername,
-} from "@mylinkspace/shared";
+  UserInsertModel,
+  UserUpdateModel,
+  UserWithLinks,
+} from "@/db/types";
+import type { UserEmail, UserId, UserUsername } from "@mylinkspace/shared";
 import { eq } from "drizzle-orm";
 
 export class UserRepository {
   // Find user by ID
-  static async findById(id: UserId) {
+  static async findById(id: UserId): Promise<UserWithLinks | undefined> {
     return db.query.users.findFirst({
       where: eq(users.id, id),
-      columns: {
-        password: false,
-      },
       // Include related links
       with: {
         links: {},
@@ -26,12 +21,11 @@ export class UserRepository {
   }
 
   // Find user by username
-  static async findByUsername(username: UserUsername) {
+  static async findByUsername(
+    username: UserUsername
+  ): Promise<UserWithLinks | undefined> {
     return db.query.users.findFirst({
       where: eq(users.username, username),
-      columns: {
-        password: false,
-      },
       // Include related links
       with: {
         links: {},
@@ -40,12 +34,11 @@ export class UserRepository {
   }
 
   // get user by email
-  static async getUserByEmail(email: UserEmail) {
+  static async getUserByEmail(
+    email: UserEmail
+  ): Promise<UserWithLinks | undefined> {
     return db.query.users.findFirst({
       where: eq(users.email, email),
-      columns: {
-        password: false,
-      },
       // Include related links
       with: {
         links: {},
@@ -54,13 +47,13 @@ export class UserRepository {
   }
 
   // Create a new user
-  static async create(data: CreateUserDTO) {
+  static async create(data: UserInsertModel) {
     const [user] = await db.insert(users).values(data).returning();
     return user;
   }
 
-  // Update an existing user
-  static async update(id: UserId, data: UpdateUserDTO) {
+  // Update an existing user by ID and data need to update
+  static async update(id: UserId, data: UserUpdateModel) {
     const [user] = await db
       .update(users)
       .set(data)
@@ -69,8 +62,9 @@ export class UserRepository {
     return user;
   }
 
-  // Delete a user
+  // Delete a user by ID
   static async delete(id: UserId) {
-    return db.delete(users).where(eq(users.id, id));
+    const [user] = await db.delete(users).where(eq(users.id, id)).returning();
+    return user;
   }
 }
