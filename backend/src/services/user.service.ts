@@ -1,28 +1,36 @@
+import type { UserSelectModel, UserWithLinks } from "@/db/types";
 import { UserRepository } from "@/repositories/user.repository";
-import { NotFoundError, UniqueError } from "@/utils/errors";
+import { NotFoundError, ServerError, UniqueError } from "@/utils/errors";
 import { logger } from "@/utils/logger";
-import type {
-  CreateUserDTO,
-  UpdateUserDTO,
-  UserId,
-  UserUsername,
+import {
+  baseUserSchema,
+  publicUserSchema,
+  type CreateUserDTO,
+  type PublicUser,
+  type UpdateUserDTO,
+  type User,
+  type UserEmail,
+  type UserId,
+  type UserUsername,
 } from "@mylinkspace/shared";
 
 export class UserService {
-  static async getUserById(id: UserId) {
+  static async getUserById(id: UserId): Promise<PublicUser> {
     const user = await UserRepository.findById(id);
 
     // Check if user not exists throw not found error
     if (!user) throw new NotFoundError("User not found");
-    return user;
+    return publicUserSchema.parse(user);
   }
 
-  static async getUserByUsername(username: UserUsername) {
+  static async getUserByUsername(username: UserUsername): Promise<PublicUser> {
     const user = await UserRepository.findByUsername(username);
 
     // Check if user not exists throw not found error
     if (!user) throw new NotFoundError("User not found");
-    return user;
+
+    // Parse user into PublicUser type
+    return publicUserSchema.parse(user);
   }
 
   static async createUser(data: CreateUserDTO) {
@@ -47,14 +55,28 @@ export class UserService {
       });
 
     // Create user
-    return UserRepository.create(data);
+    const creating = UserRepository.create(data);
+
+    // If user not created for any reason throw error
+    if (!creating)
+      throw new ServerError("Faild to create user. Please try again later.");
+
+    // Parse user to
+    return baseUserSchema.parse(creating);
   }
 
   static async updateUser(id: UserId, data: UpdateUserDTO) {
-    return UserRepository.update(id, data);
+    // Update data
+    const updating = UserRepository.update(id, data);
+
+    // If user data not updated for any reason throw error
+    if (!updating)
+      throw new ServerError("Faild to update. Please try again later.");
+
+    return baseUserSchema.parse(updating);
   }
 
-  static async isEmailExist(email: string): Promise<boolean> {
+  static async isEmailExist(email: UserEmail): Promise<boolean> {
     const existing = await UserRepository.getUserByEmail(email);
     return !!existing;
   }
@@ -63,6 +85,14 @@ export class UserService {
     const user = await UserRepository.findById(id);
     // Check if user not exists throw not found error
     if (!user) throw new NotFoundError("User not found");
-    return UserRepository.delete(id);
+
+    // Delete user
+    const deleting = UserRepository.delete(id);
+
+    // If user not deleted for any reason throw error
+    if (!deleting)
+      throw new ServerError("Faild to delete user. Please try again later.");
+
+    return !!deleting;
   }
 }
