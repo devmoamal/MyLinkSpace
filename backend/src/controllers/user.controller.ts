@@ -2,10 +2,10 @@ import { UserService } from "@/services/user.service";
 import { Response } from "@/utils/response";
 import type {
   UpdateUserDTO,
-  EmailExistanceDTO,
   UserIdDTO,
   UserUsernameDTO,
   CreateUserDTO,
+  EmailExistenceQuery,
 } from "@mylinkspace/shared";
 import type { Context } from "hono";
 
@@ -59,8 +59,7 @@ export class UserController {
 
   static async checkEmailExistance(c: Context) {
     // Extract email from hono context
-    const { email } = c.get("body") as EmailExistanceDTO;
-
+    const { email } = c.get("body") as EmailExistenceQuery;
     // Check email existence using the service
     const exists = await UserService.isEmailExist(email);
 
