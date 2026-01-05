@@ -47,3 +47,12 @@ export class NotFoundError extends AppError {
     super(message, 404);
   }
 }
+
+export class CustomError extends AppError {
+  constructor(
+    message: string = "Something went wrong",
+    code: ContentfulStatusCode = 400
+  ) {
+    super(message, code);
+  }
+}
