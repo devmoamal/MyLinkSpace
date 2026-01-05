@@ -5,11 +5,16 @@ import type {
   UserUpdateModel,
   UserWithLinks,
 } from "@/db/types";
-import { logger } from "@/utils/logger";
 import type { UserEmail, UserId, UserUsername } from "@mylinkspace/shared";
 import { eq } from "drizzle-orm";
 
 export class UserRepository {
+  // Create a new user
+  static async create(data: UserInsertModel) {
+    const [user] = await db.insert(users).values(data).returning();
+    return user;
+  }
+
   // Find user by ID
   static async findById(id: UserId): Promise<UserWithLinks | undefined> {
     return db.query.users.findFirst({
@@ -45,12 +50,6 @@ export class UserRepository {
         links: {},
       },
     });
-  }
-
-  // Create a new user
-  static async create(data: UserInsertModel) {
-    const [user] = await db.insert(users).values(data).returning();
-    return user;
   }
 
   // Update an existing user by ID and data need to update
