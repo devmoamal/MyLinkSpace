@@ -3,6 +3,8 @@ import { AppError } from "@/utils/errors";
 import { logger } from "@/utils/logger";
 import { Response } from "@/utils/response";
 
+// TODO: update error logging
+
 export const errorHandler = (err: Error, c: Context) => {
   // If the error is an instance of AppError, use its properties to format the response
   if (err instanceof AppError) {
