@@ -1,15 +1,15 @@
 {
   "name": "mylinkspace",
   "private": true,
-  "workspaces": [
-    "backend",
-    "frontend",
-    "shared"
-  ],
   "scripts": {
     "init:dev": "cp backend/.env.example backend/.env",
     "dev:backend": "bun --filter ./backend dev",
     "dev:frontend": "bun --filter ./frontend dev",
     "dev": "bun run dev:backend & bun run dev:frontend"
-  }
+  },
+  "workspaces": [
+    "backend",
+    "frontend",
+    "shared"
+  ]
 }
