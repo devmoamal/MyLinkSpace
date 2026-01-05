@@ -6,15 +6,15 @@ export const users = sqliteTable("users", {
   username: text("username").notNull().unique(),
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
-  avatar_image_url: text("avatar_image_url"),
-  is_verified: integer("is_verified", { mode: "boolean" })
+  avatar: text("avatar_image_url"),
+  isVerified: integer("is_verified", { mode: "boolean" })
     .default(false)
     .notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" })
+  createdAt: integer("created_at", { mode: "timestamp_ms" })
     .notNull()
-    .defaultNow(),
-  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .default(new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
     .notNull()
-    .defaultNow()
+    .default(new Date())
     .$onUpdate(() => new Date()),
 });
