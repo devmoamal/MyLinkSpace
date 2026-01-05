@@ -1,9 +1,9 @@
 import { relations } from "drizzle-orm";
-import { users } from "./schema/users.schema";
-import { links } from "./schema/links.schema";
+import { users } from "./schemas/users.schema";
+import { links } from "./schemas/links.schema";
 
-export * from "./schema/users.schema";
-export * from "./schema/links.schema";
+export * from "./schemas/users.schema";
+export * from "./schemas/links.schema";
 
 export const usersRelations = relations(users, ({ many }) => ({
   links: many(links),

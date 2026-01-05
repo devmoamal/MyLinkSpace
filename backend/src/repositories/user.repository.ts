@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { users } from "@/db/schema/users.schema";
+import { users } from "@/db/schemas/users.schema";
 import type {
   UserInsertModel,
   UserUpdateModel,

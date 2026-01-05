@@ -7,7 +7,6 @@ import {
   type CreateUserDTO,
   type PublicUser,
   type UpdateUserDTO,
-  type User,
   type UserEmail,
   type UserId,
   type UserUsername,
