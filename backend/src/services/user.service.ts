@@ -1,4 +1,3 @@
-import type { UserSelectModel, UserWithLinks } from "@/db/types";
 import { UserRepository } from "@/repositories/user.repository";
 import { NotFoundError, ServerError, UniqueError } from "@/utils/errors";
 import { logger } from "@/utils/logger";
@@ -37,8 +36,6 @@ export class UserService {
     // Check if email exists
     const emailExisting = await this.isEmailExist(data.email);
 
-    logger.error("Email existing:", emailExisting, data.email);
-
     // If exists, throw validation error
     if (emailExisting)
       throw new UniqueError("Email already in use", {
@@ -55,19 +52,20 @@ export class UserService {
       });
 
     // Create user
-    const creating = UserRepository.create(data);
+    const creating = await UserRepository.create(data);
 
     // If user not created for any reason throw error
-    if (!creating)
+    if (!creating) {
+      logger.error("error on creating ", creating);
       throw new ServerError("Faild to create user. Please try again later.");
-
+    }
     // Parse user to
     return baseUserSchema.parse(creating);
   }
 
   static async updateUser(id: UserId, data: UpdateUserDTO) {
     // Update data
-    const updating = UserRepository.update(id, data);
+    const updating = await UserRepository.update(id, data);
 
     // If user data not updated for any reason throw error
     if (!updating)
@@ -87,7 +85,7 @@ export class UserService {
     if (!user) throw new NotFoundError("User not found");
 
     // Delete user
-    const deleting = UserRepository.delete(id);
+    const deleting = await UserRepository.delete(id);
 
     // If user not deleted for any reason throw error
     if (!deleting)

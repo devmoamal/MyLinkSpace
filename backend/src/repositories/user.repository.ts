@@ -5,6 +5,7 @@ import type {
   UserUpdateModel,
   UserWithLinks,
 } from "@/db/types";
+import { logger } from "@/utils/logger";
 import type { UserEmail, UserId, UserUsername } from "@mylinkspace/shared";
 import { eq } from "drizzle-orm";
 
