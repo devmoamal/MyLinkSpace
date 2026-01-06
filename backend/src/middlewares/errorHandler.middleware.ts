@@ -4,19 +4,25 @@ import { logger } from "@/utils/logger";
 import { Response } from "@/utils/response";
 
 // TODO: update error logging
-
-export const errorHandler = (err: Error, c: Context) => {
-  // If the error is an instance of AppError, use its properties to format the response
-  if (err instanceof AppError) {
+export const errorHandler = (err: any, c: Context) => {
+  // Check if it's our error via name or property (more reliable than instanceof)
+  if (err.name === "AppError" || err instanceof AppError || err.code === 400) {
     logger.error("N] App error", err.message);
     return Response.error(c, {
       message: err.message,
-      status: err.code,
+      status: err.code || 400,
       errors: err.errors,
     });
   }
 
-  // If the error is unhandled, return a generic internal server error response
+  // If it's a native JSON SyntaxError, handle it as a 400
+  if (err instanceof SyntaxError && err.message.includes("JSON")) {
+    return Response.error(c, {
+      message: "Invalid JSON format",
+      status: 400,
+    });
+  }
+
   logger.error("C] Unhandled error:", err);
   return Response.error(c, {
     message: "Internal server error",
