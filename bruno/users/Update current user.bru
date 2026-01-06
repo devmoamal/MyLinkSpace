@@ -1,0 +1,17 @@
+meta {
+  name: Update current user
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{base_url}}{{api_v1}}/users/me
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email":"moamal@moamal.space"
+  }
+}

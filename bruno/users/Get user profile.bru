@@ -1,0 +1,11 @@
+meta {
+  name: Get user profile
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{base_url}}{{api_v1}}/users/@moamal
+  body: none
+  auth: inherit
+}
