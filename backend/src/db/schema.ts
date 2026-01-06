@@ -10,7 +10,7 @@ export const userRelations = relations(users, ({ many }) => ({
 
 export const linksRelations = relations(links, ({ one }) => ({
   users: one(users, {
-    fields: [links.userId],
+    fields: [links.user_id],
     references: [users.id],
   }),
 }));
