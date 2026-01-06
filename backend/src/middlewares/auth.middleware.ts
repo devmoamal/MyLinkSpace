@@ -2,6 +2,8 @@ import type { MiddlewareHandler } from "hono";
 import { verifyToken } from "@/utils/jwt";
 import { AuthorizationError } from "@/utils/errors";
 
+// TODO: Adding token validation
+
 export const authMiddleware: MiddlewareHandler = async (c, next) => {
   const authHeader = c.req.header("authorization");
 
