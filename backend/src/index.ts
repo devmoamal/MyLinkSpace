@@ -9,8 +9,8 @@ const app = server();
 
 // Middlewares
 app.onError(errorHandler);
-app.use(corsMiddleware);
-app.use(LoggerMiddleware());
+app.use("*", LoggerMiddleware());
+app.use("*", corsMiddleware);
 
 // Router
 app.route("/", Router);
