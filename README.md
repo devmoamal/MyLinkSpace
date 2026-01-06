@@ -20,4 +20,5 @@ bun run dev
 - **Vite**: Frontend building tool
 - **ReactJS**: Frontend library
 - **Tailwindcss**: CSS Framework
+- **Zustand**: State management
 - **Zod**: Typescript validation
