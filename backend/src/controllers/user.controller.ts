@@ -25,6 +25,31 @@ export class UserController {
     return Response.success(c, { data: user });
   }
 
+  static async updateCurrentUser(c: Context) {
+    // Extract user ID from auth middleware jwt
+    const { id } = c.get("user") as JwtPayload;
+
+    // Extract update data from hono context
+    const { ...data } = c.get("body") as UpdateUserDTO;
+
+    // Update user using the service
+    const user = await UserService.updateUser(id, data);
+
+    // Return success response
+    return Response.success(c, { data: { user } });
+  }
+
+  static async deleteCurrentUser(c: Context) {
+    // Extract user ID from auth middleware jwt
+    const { id } = c.get("user") as JwtPayload;
+
+    // Delete user using the service
+    await UserService.deleteUser(id);
+
+    // Return success response
+    return Response.success(c, {});
+  }
+
   static async getUserById(c: Context) {
     // Extract user ID from hono context
     const { id } = c.get("params") as UserIdDTO;
@@ -61,30 +86,5 @@ export class UserController {
 
     // Return response
     return Response.success(c, { data: { exists } });
-  }
-
-  static async updateCurrentUser(c: Context) {
-    // Extract user ID from auth middleware jwt
-    const { id } = c.get("user") as JwtPayload;
-
-    // Extract update data from hono context
-    const { ...data } = c.get("body") as UpdateUserDTO;
-
-    // Update user using the service
-    const user = await UserService.updateUser(id, data);
-
-    // Return success response
-    return Response.success(c, { data: { user } });
-  }
-
-  static async deleteCurrentUser(c: Context) {
-    // Extract user ID from auth middleware jwt
-    const { id } = c.get("user") as JwtPayload;
-
-    // Delete user using the service
-    await UserService.deleteUser(id);
-
-    // Return success response
-    return Response.success(c, {});
   }
 }

@@ -9,7 +9,6 @@ import {
   idValidation,
   updateUserSchema,
   usernameProfileValidation,
-  usernameValidation,
 } from "@mylinkspace/shared";
 import { authMiddleware } from "@/middlewares/auth.middleware";
 

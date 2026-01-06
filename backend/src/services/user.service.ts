@@ -1,18 +1,10 @@
 import { UserRepository } from "@/repositories/user.repository";
-import { hashPassword } from "@/utils/crypto";
-import {
-  AuthorizationError,
-  NotFoundError,
-  ServerError,
-  UniqueError,
-} from "@/utils/errors";
+import { NotFoundError, ServerError } from "@/utils/errors";
 import { logger } from "@/utils/logger";
 import {
   baseUserSchema,
   publicUserSchema,
-  type LoginDTO,
   type PublicUser,
-  type RegisterDTO,
   type UpdateUserDTO,
   type UserEmail,
   type UserId,
