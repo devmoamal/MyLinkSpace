@@ -3,7 +3,7 @@ import type { ContentfulStatusCode } from "hono/utils/http-status";
 import type { ApiResponse } from "@/types/response";
 
 type SuccessOptions<T> = {
-  data: T;
+  data?: T;
   message?: string;
   status?: ContentfulStatusCode;
 };
@@ -16,7 +16,7 @@ type ErrorOptions = {
 
 export const Response = {
   success<T>(c: Context, options: SuccessOptions<T>) {
-    const { data, message = "Success", status = 200 } = options;
+    const { data, message = "success", status = 200 } = options;
     return c.json<ApiResponse<T>>(
       { ok: true, code: status, message, data },
       status
