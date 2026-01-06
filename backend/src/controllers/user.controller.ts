@@ -1,23 +1,27 @@
 import { UserService } from "@/services/user.service";
+import type { JwtPayload } from "@/types";
+import { NotFoundError } from "@/utils/errors";
 import { Response } from "@/utils/response";
 import type {
   UpdateUserDTO,
   UserIdDTO,
   UserUsernameDTO,
-  CreateUserDTO,
   EmailExistenceQuery,
 } from "@mylinkspace/shared";
 import type { Context } from "hono";
 
 export class UserController {
-  static async createUser(c: Context) {
-    // Extract user data from hono context
-    const { ...data } = c.get("body") as CreateUserDTO;
+  static async getCurrentUser(c: Context) {
+    // Extract user ID from auth middleware jwt
+    const { id } = c.get("user") as JwtPayload;
 
-    // Create user using the service
-    const user = await UserService.createUser(data);
+    // Fetch user using the service
+    const user = await UserService.getCurrentUserById(id);
 
-    // Return success response
+    // If user not found throw not found error
+    if (!user) throw new NotFoundError("User not found");
+
+    // return success response
     return Response.success(c, { data: user });
   }
 
@@ -27,6 +31,9 @@ export class UserController {
 
     // Fetch user using the service
     const user = await UserService.getUserById(id);
+
+    // If user not found throw not found error
+    if (!user) throw new NotFoundError("User not found");
 
     // return success response
     return Response.success(c, { data: user });
@@ -39,22 +46,11 @@ export class UserController {
     // Fetch user using the service
     const user = await UserService.getUserByUsername(username);
 
-    // Return success response
-    return Response.success(c, { data: user });
-  }
-
-  static async updateUser(c: Context) {
-    // Extract user ID from hono context
-    const { id } = c.get("params") as UserIdDTO;
-
-    // Extract update data from hono context
-    const { ...data } = c.get("body") as UpdateUserDTO;
-
-    // Update user using the service
-    const user = await UserService.updateUser(id, data);
+    // If user not found throw not found error
+    if (!user) throw new NotFoundError("User not found");
 
     // Return success response
-    return Response.success(c, { data: user });
+    return Response.success(c, { data: { user } });
   }
 
   static async checkEmailExistance(c: Context) {
@@ -67,14 +63,28 @@ export class UserController {
     return Response.success(c, { data: { exists } });
   }
 
-  static async deleteUser(c: Context) {
-    // Extract user ID from hono context
-    const { id } = c.get("params") as UserIdDTO;
+  static async updateCurrentUser(c: Context) {
+    // Extract user ID from auth middleware jwt
+    const { id } = c.get("user") as JwtPayload;
 
-    // Delete user using the service
-    const deleted = await UserService.deleteUser(id);
+    // Extract update data from hono context
+    const { ...data } = c.get("body") as UpdateUserDTO;
+
+    // Update user using the service
+    const user = await UserService.updateUser(id, data);
 
     // Return success response
-    return Response.success(c, { data: null });
+    return Response.success(c, { data: { user } });
+  }
+
+  static async deleteCurrentUser(c: Context) {
+    // Extract user ID from auth middleware jwt
+    const { id } = c.get("user") as JwtPayload;
+
+    // Delete user using the service
+    await UserService.deleteUser(id);
+
+    // Return success response
+    return Response.success(c, {});
   }
 }

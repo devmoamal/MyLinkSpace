@@ -5,58 +5,63 @@ import {
   validateParams,
 } from "@/middlewares/validator.middleware";
 import {
-  createUserSchema,
   emailValidation,
   idValidation,
   updateUserSchema,
+  usernameProfileValidation,
   usernameValidation,
 } from "@mylinkspace/shared";
+import { authMiddleware } from "@/middlewares/auth.middleware";
 
 const router = new Hono();
 
-// Endpoints
+// --- Endpoints --- //
 
-// Create user
-router.post(
-  "/",
-  validateBody(createUserSchema), // Validate create user body
-  UserController.createUser
+// Not Auth Protected Endpoints //
+
+// Get user profile
+router.get(
+  "/:username{@[a-zA-Z0-9_.]+}",
+  validateParams(usernameProfileValidation), // Validate username param
+  UserController.getUserByUsername // Get user by username controller
 );
 
 // Get user by ID
 router.get(
   "/:id{[0-9]+}",
   validateParams(idValidation), // Validate ID param
-  UserController.getUserById
-);
-
-// Get user by username
-router.get(
-  "/:username",
-  validateParams(usernameValidation), // Validate username param
-  UserController.getUserByUsername
+  UserController.getUserById // Get user by ID controller
 );
 
 // Check if email exists
 router.post(
   "/isEmailExist",
   validateBody(emailValidation), // Validate email body
-  UserController.checkEmailExistance
+  UserController.checkEmailExistance // Check email existance controller
 );
 
-// Update user by ID
+// Auth Protected Endpoints //
+
+// Get current user
+router.get(
+  "/me",
+  authMiddleware,
+  UserController.getCurrentUser // Get user by ID controller
+);
+
+// Update current user
 router.put(
-  "/:id{[0-9]+}",
-  validateParams(idValidation), // Validate ID param
+  "/me",
+  authMiddleware, // Auth middleware
   validateBody(updateUserSchema), // Validate update user body
-  UserController.updateUser
+  UserController.updateCurrentUser // Update user controller
 );
 
-// Delete user by ID
+// Delete current user
 router.delete(
-  "/:id{[0-9]+}",
-  validateParams(idValidation), // Validate ID param
-  UserController.deleteUser
+  "/me",
+  authMiddleware, // Auth middleware
+  UserController.deleteCurrentUser // Delete user controller
 );
 
 export default router;

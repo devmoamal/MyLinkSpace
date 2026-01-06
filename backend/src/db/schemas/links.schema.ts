@@ -4,7 +4,7 @@ import type { LinkIconType, LinkType } from "@mylinkspace/shared";
 
 export const links = sqliteTable("links", {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  userId: integer("user_id")
+  user_id: integer("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   title: text("title").notNull(),
@@ -13,12 +13,12 @@ export const links = sqliteTable("links", {
   icon: text("icon").$type<LinkIconType>().notNull(),
 
   position: integer("position").notNull().default(0),
-  isActive: integer("is_active", { mode: "boolean" }).notNull().default(true),
+  is_active: integer("is_active", { mode: "boolean" }).notNull().default(true),
 
-  createdAt: integer("created_at", { mode: "timestamp_ms" })
+  created_at: integer("created_at", { mode: "timestamp" })
     .notNull()
     .default(new Date()),
-  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+  updated_at: integer("updated_at", { mode: "timestamp" })
     .notNull()
     .default(new Date())
     .$onUpdate(() => new Date()),

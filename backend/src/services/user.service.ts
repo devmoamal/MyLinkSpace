@@ -1,11 +1,18 @@
 import { UserRepository } from "@/repositories/user.repository";
-import { NotFoundError, ServerError, UniqueError } from "@/utils/errors";
+import { hashPassword } from "@/utils/crypto";
+import {
+  AuthorizationError,
+  NotFoundError,
+  ServerError,
+  UniqueError,
+} from "@/utils/errors";
 import { logger } from "@/utils/logger";
 import {
   baseUserSchema,
   publicUserSchema,
-  type CreateUserDTO,
+  type LoginDTO,
   type PublicUser,
+  type RegisterDTO,
   type UpdateUserDTO,
   type UserEmail,
   type UserId,
@@ -13,53 +20,34 @@ import {
 } from "@mylinkspace/shared";
 
 export class UserService {
-  static async getUserById(id: UserId): Promise<PublicUser> {
+  static async getCurrentUserById(id: UserId) {
     const user = await UserRepository.findById(id);
 
     // Check if user not exists throw not found error
-    if (!user) throw new NotFoundError("User not found");
+    if (!user) return undefined;
+
+    return baseUserSchema.parse(user);
+  }
+
+  static async getUserById(id: UserId): Promise<PublicUser | undefined> {
+    const user = await UserRepository.findById(id);
+
+    // Check if user not exists throw not found error
+    if (!user) return undefined;
+
     return publicUserSchema.parse(user);
   }
 
-  static async getUserByUsername(username: UserUsername): Promise<PublicUser> {
+  static async getUserByUsername(
+    username: UserUsername
+  ): Promise<PublicUser | undefined> {
     const user = await UserRepository.findByUsername(username);
 
     // Check if user not exists throw not found error
-    if (!user) throw new NotFoundError("User not found");
+    if (!user) return undefined;
 
     // Parse user into PublicUser type
     return publicUserSchema.parse(user);
-  }
-
-  static async createUser(data: CreateUserDTO) {
-    // Check if email exists
-    const emailExisting = await this.isEmailExist(data.email);
-
-    // If exists, throw validation error
-    if (emailExisting)
-      throw new UniqueError("Email already in use", {
-        email: ["Email is already registered"],
-      });
-
-    // Check if username exists
-    const usernameExisting = await UserRepository.findByUsername(data.username);
-
-    // If exists, throw validation error
-    if (usernameExisting)
-      throw new UniqueError("Username already in use", {
-        username: ["Username is already registered"],
-      });
-
-    // Create user
-    const creating = await UserRepository.create(data);
-
-    // If user not created for any reason throw error
-    if (!creating) {
-      logger.error("error on creating ", creating);
-      throw new ServerError("Faild to create user. Please try again later.");
-    }
-    // Parse user to
-    return baseUserSchema.parse(creating);
   }
 
   static async updateUser(id: UserId, data: UpdateUserDTO) {
@@ -80,6 +68,7 @@ export class UserService {
 
   static async deleteUser(id: UserId) {
     const user = await UserRepository.findById(id);
+
     // Check if user not exists throw not found error
     if (!user) throw new NotFoundError("User not found");
 
