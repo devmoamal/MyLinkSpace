@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { TimeStringValue } from "./types";
 
 // Environment schema validation
 const envSchema = z.object({
@@ -14,6 +15,19 @@ const envSchema = z.object({
 
   // Logging
   LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
+
+  // Password
+  SALT: z.string().min(1, "SALT is required"),
+
+  // Auth
+  JWT_SECRET: z.string().min(1, "JWT_SECRET is required"),
+  // This is the time the token will be expired
+  // Example: 7d, 1h, 30m, 1s
+  // Default: 7d
+  JWT_EXPIRES_IN: z
+    .string()
+    .regex(/^\d+(s|m|h|d)?$/, "Invalid JWT_EXPIRES_IN format")
+    .default("7d") as z.ZodType<TimeStringValue>,
 });
 
 // Validate environment variables
