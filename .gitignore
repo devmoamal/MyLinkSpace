@@ -4,6 +4,7 @@
 *.db
 
 # Folders
+logs/
 migrations/
 dist/
 node_modules/
