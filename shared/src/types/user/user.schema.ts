@@ -1,30 +1,51 @@
 import { z } from "zod";
 import { linkSchema } from "../link";
 
+// --- Sentivet Fileds --- //
+
+export const sensitiveFields = z.object({
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
 // --- Base schema (shared DTO base) --- //
 
 export const baseUserSchema = z.object({
+  id: z.number(),
   name: z.string().trim().min(1, "Name must be at least 1 character"),
   username: z.string().trim().min(3, "Username must be at least 3 characters"),
   email: z.email("Must be a valid email"),
   avatar_image_url: z.url().nullable().optional(),
+  is_verified: z.boolean(),
 });
 
 // --- Public user schema --- //
-export const publicUserSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-  username: z.string(),
-  avatar_image_url: z.url().nullable().optional(),
-  is_verified: z.boolean(),
-  links: z.array(linkSchema),
-});
+
+export const publicUserSchema = baseUserSchema
+  .omit({
+    email: true,
+  })
+  .extend({
+    links: z.array(linkSchema),
+  });
+
+// --- Login User --- //
+
+export const loginSchema = z
+  .object({
+    email: z.email(),
+  })
+  .extend(sensitiveFields.shape);
 
 // --- Create user --- //
 
-export const createUserSchema = baseUserSchema.extend({
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
+export const registerSchema = baseUserSchema
+  .omit({
+    id: true,
+    is_verified: true,
+    avatar_image_url: true,
+  })
+  .extend(sensitiveFields.shape);
+
 // --- Update user --- //
 
 export const updateUserSchema = baseUserSchema
@@ -52,10 +73,20 @@ export const idValidation = z.object({
   id: z.coerce.number().int().positive(),
 });
 
+export const usernameProfileValidation = z.object({
+  username: z
+    .string()
+    .min(1)
+    .transform((val) => (val.startsWith("@") ? val.slice(1) : val))
+    .refine((val) => /^[a-zA-Z0-9_]+$/.test(val), {
+      message: "Invalid username format",
+    }),
+});
+
 export const usernameValidation = z.object({
   username: z.string().trim().min(3),
 });
 
 export const emailValidation = z.object({
-  email: z.string().trim().email(),
+  email: z.email(),
 });
