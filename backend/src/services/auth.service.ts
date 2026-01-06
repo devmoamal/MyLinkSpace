@@ -1,5 +1,5 @@
 import { UserRepository } from "@/repositories/user.repository";
-import { hashPassword } from "@/utils/crypto";
+import { hashPassword, verifyPassword } from "@/utils/crypto";
 import { AuthorizationError, ServerError, UniqueError } from "@/utils/errors";
 import {
   baseUserSchema,
@@ -11,14 +11,17 @@ import { logger } from "@/utils/logger";
 
 export class AuthService {
   static async login(data: LoginDTO) {
-    // Hash password using crypto
-    const hashedPassword = await hashPassword(data.password);
-
     // Fetch user by email
     const user = await UserRepository.getUserByEmail(data.email);
 
-    // If user not found or password not match throw error
-    if (!user || user.password !== hashedPassword.toString())
+    // If user not found throw error
+    if (!user) throw new AuthorizationError("Invalid email or password");
+
+    // Verify password using crypto util
+    const isPasswordValid = await verifyPassword(data.password, user.password);
+
+    // If password not match throw error
+    if (!isPasswordValid)
       throw new AuthorizationError("Invalid email or password");
 
     return baseUserSchema.parse(user);
@@ -43,22 +46,26 @@ export class AuthService {
         username: ["Username is already registered"],
       });
 
-    // Hash password using crypto
+    // Hash password using crypto util
+    let hashedPassword;
     try {
-      data.password = (await hashPassword(data.password)).toString();
-    } catch (e) {
-      logger.error("Failed to hash password");
-      throw new ServerError("Failed to while creating user");
+      hashedPassword = await hashPassword(data.password);
+    } catch (error) {
+      logger.error("Password hashing failed", { error, email: data.email });
+      throw new ServerError("An internal error occurred during registration");
     }
 
-    // Create user
-    const creating = await UserRepository.create(data);
+    // User Creation
+    const newUser = await UserRepository.create({
+      ...data,
+      password: hashedPassword.toString(),
+    });
 
     // If user not created for any reason throw error
-    if (!creating)
+    if (!newUser)
       throw new ServerError("Faild to create user. Please try again later.");
 
     // Parse user to
-    return baseUserSchema.parse(creating);
+    return baseUserSchema.parse(newUser);
   }
 }
