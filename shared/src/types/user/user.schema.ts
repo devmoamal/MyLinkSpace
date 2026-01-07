@@ -25,7 +25,15 @@ export const publicUserSchema = baseUserSchema
     email: true,
   })
   .extend({
-    links: z.array(linkSchema),
+    links: z.array(
+      linkSchema.omit({
+        id: true,
+        user_id: true,
+        is_active: true,
+        created_at: true,
+        updated_at: true,
+      })
+    ),
   });
 
 // --- Login User --- //
@@ -73,7 +81,7 @@ export const idValidation = z.object({
   id: z.coerce.number().int().positive(),
 });
 
-export const usernameProfileValidation = z.object({
+export const usernameParamValidation = z.object({
   username: z
     .string()
     .min(1)
