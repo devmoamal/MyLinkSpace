@@ -6,3 +6,5 @@ import { linkSchema } from "./link.shcema";
 export type Link = z.infer<typeof linkSchema>;
 export type LinkType = (typeof LINK_TYPES)[number];
 export type LinkIconType = (typeof LINK_ICONS)[number];
+
+export type LinkId = Link["id"];

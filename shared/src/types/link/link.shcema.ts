@@ -1,20 +1,50 @@
 import { z } from "zod";
-import type { LinkIconType, LinkType } from "./link.types";
+import { LINK_ICONS, LINK_TYPES } from "../../constants";
 
 // --- Link schema ---  //
 
 // Base link schema without entity fields
-export const linkSchema = z.object({
-  id: z.number(),
 
+export const baseLinkSchema = z.object({
+  id: z.number(),
   user_id: z.number(),
   title: z.string().min(3, "Title should be at least 3 character"),
   url: z.url("Must be a valid URL"),
-  type: z.string() as z.ZodType<LinkType>, // Will be validated by constants
-  icon: z.string() as z.ZodType<LinkIconType>, // Will be validated by constants
+  type: z.enum(LINK_TYPES), // Will be validated by constants
+  icon: z.enum(LINK_ICONS), // Will be validated by constants
   position: z.number().min(0), // position should be non-negative
   is_active: z.boolean().default(true),
+  created_at: z.date(),
+  updated_at: z.date(),
+});
 
-  createdAt: z.date(),
-  updatedAt: z.date(),
+// --- Schemas --- //
+
+export const linkSchema = baseLinkSchema.extend({
+  id: z.number(),
+
+  created_at: z.date(),
+  updated_at: z.date(),
+});
+
+export const createLinkSchema = baseLinkSchema.omit({
+  id: true,
+  user_id: true,
+  position: true,
+  is_active: true,
+  created_at: true,
+  updated_at: true,
+});
+
+export const updateLinkSchema = baseLinkSchema.partial().omit({
+  id: true,
+  user_id: true,
+  created_at: true,
+  updated_at: true,
+});
+
+// --- Validators --- //
+
+export const linkIdValidation = z.object({
+  id: z.coerce.number().int().positive(),
 });
