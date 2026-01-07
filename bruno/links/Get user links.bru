@@ -1,0 +1,15 @@
+meta {
+  name: Get user links 
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}{{api_v1}}/links
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

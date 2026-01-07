@@ -1,0 +1,22 @@
+meta {
+  name: Update link by id
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{base_url}}{{api_v1}}/links/3
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "icon":"Telegram"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
