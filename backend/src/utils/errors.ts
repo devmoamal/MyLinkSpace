@@ -30,21 +30,15 @@ export class AuthorizationError extends AppError {
   }
 }
 
-export class ServerError extends AppError {
-  constructor(message: string = "Internal server error") {
-    super(message, 500);
-  }
-}
-
-export class UnknownError extends AppError {
-  constructor(message: string = "Internal server error") {
-    super(message, 500);
-  }
-}
-
 export class NotFoundError extends AppError {
   constructor(message: string = "Resource not found") {
     super(message, 404);
+  }
+}
+
+export class ForbiddenError extends AppError {
+  constructor(message: string = "Forbidden") {
+    super(message, 403);
   }
 }
 
@@ -54,5 +48,16 @@ export class CustomError extends AppError {
     code: ContentfulStatusCode = 400
   ) {
     super(message, code);
+  }
+}
+export class ServerError extends AppError {
+  constructor(message: string = "Internal server error") {
+    super(message, 500);
+  }
+}
+
+export class UnknownError extends AppError {
+  constructor(message: string = "Internal server error") {
+    super(message, 500);
   }
 }
