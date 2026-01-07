@@ -8,7 +8,7 @@ import {
   emailValidation,
   idValidation,
   updateUserSchema,
-  usernameProfileValidation,
+  usernameParamValidation,
 } from "@mylinkspace/shared";
 import { authMiddleware } from "@/middlewares/auth.middleware";
 
@@ -21,7 +21,7 @@ const router = new Hono();
 // Get user profile
 router.get(
   "/:username{@[a-zA-Z0-9_.]+}",
-  validateParams(usernameProfileValidation), // Validate username param
+  validateParams(usernameParamValidation), // Validate username param
   UserController.getUserByUsername // Get user by username controller
 );
 
