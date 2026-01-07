@@ -1,0 +1,25 @@
+meta {
+  name: Create link
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}{{api_v1}}/links
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title": "My telegram channel",
+    "url": "https://t.me/MoamalHussinx",
+    "type":"Website",
+    "icon": "Telegram"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

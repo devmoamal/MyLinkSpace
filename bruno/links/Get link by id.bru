@@ -1,0 +1,16 @@
+meta {
+  name: Get link by id
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{base_url}}{{api_v1}}/links/2
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
