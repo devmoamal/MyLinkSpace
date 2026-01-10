@@ -2,14 +2,14 @@ import { apiClient } from "@/lib/api";
 import type { Link } from "@mylinkspace/shared";
 
 type LinkResponse = {
-  success: boolean;
+  ok: boolean;
   data: {
     link: Link;
   };
 };
 
 type LinksResponse = {
-  success: boolean;
+  ok: boolean;
   data: {
     links: Link[];
   };
@@ -20,6 +20,7 @@ type CreateLinkData = {
   url: string;
   type: string;
   icon: string;
+  position?: number;
 };
 
 type UpdateLinkData = Partial<CreateLinkData> & {

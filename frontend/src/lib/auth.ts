@@ -14,7 +14,7 @@ type RegisterData = {
 };
 
 type AuthResponse = {
-  success: boolean;
+  ok: boolean;
   data: {
     user: User;
     token: string;

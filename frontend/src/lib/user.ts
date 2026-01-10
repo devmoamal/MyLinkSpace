@@ -1,11 +1,26 @@
 import { apiClient } from "@/lib/api";
-import type { PublicUser } from "@mylinkspace/shared";
+import type { PublicUser, User } from "@mylinkspace/shared";
 
 type UserResponse = {
-  success: boolean;
+  ok: boolean;
   data: {
     user: PublicUser;
   };
+};
+
+type CurrentUserResponse = {
+  ok: boolean;
+  data: {
+    user: User;
+  };
+};
+
+type UpdateUserData = {
+  name?: string;
+  username?: string;
+  email?: string;
+  bio?: string;
+  is_live?: boolean;
 };
 
 /**
@@ -27,7 +42,17 @@ export const userApi = {
   /**
    * Get current user (requires auth)
    */
-  async getCurrentUser(token: string): Promise<UserResponse> {
-    return apiClient.get<UserResponse>("/users/me", token);
+  async getCurrentUser(token: string): Promise<CurrentUserResponse> {
+    return apiClient.get<CurrentUserResponse>("/users/me", token);
+  },
+
+  /**
+   * Update current user (requires auth)
+   */
+  async updateCurrentUser(
+    data: UpdateUserData,
+    token: string
+  ): Promise<CurrentUserResponse> {
+    return apiClient.put<CurrentUserResponse>("/users/me", data, token);
   },
 };
