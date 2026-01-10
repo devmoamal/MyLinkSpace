@@ -3,7 +3,6 @@ import type { Context } from "hono";
 import { Response } from "@/utils/response";
 import { AuthService } from "@/services/auth.service";
 import { signToken } from "@/utils/jwt";
-import { logger } from "@/utils/logger";
 
 export class AuthController {
   static async login(c: Context) {
