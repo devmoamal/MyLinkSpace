@@ -2,6 +2,12 @@
 
 Simple and lightweight self-hosted link in bio sites like
 
+## Preview
+
+![MyLinkSpace Demo](./demo/1.png)
+
+**[📸 View more screenshots →](./demo)**
+
 ## Run App
 
 ```bash
