@@ -4,9 +4,11 @@ export const users = sqliteTable("users", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),
   username: text("username").notNull().unique(),
+  bio: text("bio"),
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
   avatar: text("avatar"), // Avatar image URL
+  is_live: integer("is_live", { mode: "boolean" }).default(false).notNull(),
   is_verified: integer("is_verified", { mode: "boolean" })
     .default(false)
     .notNull(),

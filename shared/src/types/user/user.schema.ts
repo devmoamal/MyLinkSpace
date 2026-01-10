@@ -13,8 +13,14 @@ export const baseUserSchema = z.object({
   id: z.number(),
   name: z.string().trim().min(1, "Name must be at least 1 character"),
   username: z.string().trim().min(3, "Username must be at least 3 characters"),
+  bio: z
+    .string()
+    .max(1000, "Bio must be at most 1000 characters")
+    .optional()
+    .nullable(),
   email: z.email("Must be a valid email"),
   avatar_image_url: z.url().nullable().optional(),
+  is_live: z.boolean(),
   is_verified: z.boolean(),
 });
 
@@ -49,6 +55,8 @@ export const loginSchema = z
 export const registerSchema = baseUserSchema
   .omit({
     id: true,
+    bio: true,
+    is_live: true,
     is_verified: true,
     avatar_image_url: true,
   })
@@ -57,6 +65,9 @@ export const registerSchema = baseUserSchema
 // --- Update user --- //
 
 export const updateUserSchema = baseUserSchema
+  .omit({
+    id: true,
+  })
   .partial()
   .refine((data) => Object.keys(data).length > 0, {
     message: "At least one field must be provided",
