@@ -6,13 +6,14 @@ import {
   publicUserSchema,
   type PublicUser,
   type UpdateUserDTO,
+  type User,
   type UserEmail,
   type UserId,
   type UserUsername,
 } from "@mylinkspace/shared";
 
 export class UserService {
-  static async getCurrentUserById(id: UserId) {
+  static async getCurrentUserById(id: UserId): Promise<User | undefined> {
     const user = await UserRepository.findById(id);
 
     // Check if user not exists throw not found error
@@ -21,7 +22,7 @@ export class UserService {
     return baseUserSchema.parse(user);
   }
 
-  static async getUserById(id: UserId): Promise<PublicUser | undefined> {
+  static async getUserById(id: UserId): Promise<PublicUser | User | undefined> {
     const user = await UserRepository.findById(id);
 
     // Check if user not exists throw not found error
@@ -31,15 +32,21 @@ export class UserService {
   }
 
   static async getUserByUsername(
-    username: UserUsername
-  ): Promise<PublicUser | undefined> {
+    username: UserUsername,
+    is_visitor: boolean = false
+  ): Promise<PublicUser | User | undefined> {
     const user = await UserRepository.findByUsername(username);
 
     // Check if user not exists throw not found error
     if (!user) return undefined;
 
+    // Check if user is not live throw not found error
+    if (is_visitor && !user.is_live) throw new NotFoundError("User not found");
+
     // Parse user into PublicUser type
-    return publicUserSchema.parse(user);
+    return is_visitor
+      ? publicUserSchema.parse(user)
+      : baseUserSchema.parse(user);
   }
 
   static async updateUser(id: UserId, data: UpdateUserDTO) {

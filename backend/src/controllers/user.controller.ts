@@ -22,7 +22,7 @@ export class UserController {
     if (!user) throw new NotFoundError("User not found");
 
     // return success response
-    return Response.success(c, { data: user });
+    return Response.success(c, { data: { user } });
   }
 
   static async updateCurrentUser(c: Context) {
@@ -69,7 +69,7 @@ export class UserController {
     const { username } = c.get("params") as UserUsernameDTO;
 
     // Fetch user using the service
-    const user = await UserService.getUserByUsername(username);
+    const user = await UserService.getUserByUsername(username, true);
 
     // If user not found throw not found error
     if (!user) throw new NotFoundError("User not found");

@@ -21,7 +21,9 @@ export class UserRepository {
       where: eq(users.id, id),
       // Include related links
       with: {
-        links: {},
+        links: {
+          orderBy: (links, { asc }) => [asc(links.position)],
+        },
       },
     });
   }
@@ -34,7 +36,10 @@ export class UserRepository {
       where: eq(users.username, username),
       // Include related links
       with: {
-        links: {},
+        links: {
+          orderBy: (links, { asc }) => [asc(links.position)],
+          where: (links, { eq }) => eq(links.is_active, true),
+        },
       },
     });
   }
