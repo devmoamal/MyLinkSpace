@@ -2,7 +2,9 @@
   "name": "mylinkspace",
   "private": true,
   "scripts": {
-    "init:dev": "cp backend/.env.example backend/.env",
+    "init:db": "cd backend && bun run db:generate && bun run db:migrate",
+    "init:env": "cp backend/.env.example backend/.env",
+    "init": "bun run init:env && bun run init:db",
     "dev:backend": "bun --filter ./backend dev",
     "dev:frontend": "bun --filter ./frontend dev",
     "dev": "bun run dev:backend & bun run dev:frontend"
