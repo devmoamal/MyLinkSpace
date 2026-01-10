@@ -2,9 +2,13 @@
 .DB_Store
 .env
 *.db
+*.md
+!README.md
 
 # Folders
+.vscode/
 logs/
 migrations/
 dist/
 node_modules/
+
