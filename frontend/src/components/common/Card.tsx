@@ -14,7 +14,7 @@ type CardProps = {
 function Card({ className, children, variant = "default" }: CardProps) {
   const variants = {
     default:
-      "bg-background border-2 border-secondary shadow-sm shadow-purple-glow/10",
+      "bg-transparent border-2 border-secondary shadow-sm shadow-purple-glow/10",
     glass:
       "bg-background/80 backdrop-blur-lg border-2 border-primary/10 shadow-purple-glow/5",
     "glass-alt":
@@ -22,13 +22,7 @@ function Card({ className, children, variant = "default" }: CardProps) {
   };
 
   return (
-    <div
-      className={cn(
-        "rounded-4xl p-6 transition-all duration-300",
-        variants[variant],
-        className
-      )}
-    >
+    <div className={cn("rounded-4xl p-6", variants[variant], className)}>
       {children}
     </div>
   );

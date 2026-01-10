@@ -23,11 +23,11 @@ function ProfileLink({ title, url, icon, className }: ProfileLinkProps) {
         className
       )}
     >
-      <div className="flex items-center gap-4">
-        <div className="text-primary ">{icon}</div>
-        <span className="font-semibold text-text group-hover:text-primary">
+      <div className="flex items-center gap-4 min-w-0 flex-1">
+        <div className="text-primary shrink-0">{icon}</div>
+        <p className="font-semibold text-text group-hover:text-primary truncate">
           {title}
-        </span>
+        </p>
       </div>
     </a>
   );

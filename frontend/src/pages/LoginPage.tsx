@@ -1,12 +1,15 @@
-import { cn } from "@/lib/utils";
+import PageContainer from "@/components/common/PageContainer";
 import { Link, useNavigate } from "@tanstack/react-router";
 import Button from "@/components/common/Button";
 import Card from "@/components/common/Card";
 import Input from "@/components/common/Input";
+import ErrorAlert from "@/components/common/ErrorAlert";
+import FormField from "@/components/common/FormField";
 import { useForm } from "@tanstack/react-form";
 import { authApi } from "@/lib/auth";
 import useAuth from "@/hooks/useAuth";
 import { useState } from "react";
+import { toast } from "sonner";
 
 type LoginPageProps = {
   className?: string;
@@ -14,10 +17,9 @@ type LoginPageProps = {
 
 function LoginPage({ className }: LoginPageProps) {
   const navigate = useNavigate();
-  const { setAuth } = useAuth();
+  const { setAuth, isAuthenticated } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { isAuthenticated } = useAuth();
 
   if (isAuthenticated) {
     navigate({ to: "/profile" });
@@ -34,14 +36,14 @@ function LoginPage({ className }: LoginPageProps) {
         setIsLoading(true);
 
         const response = await authApi.login(value);
-
-        // Store auth data
         setAuth(response.data.user, response.data.token);
-
-        // Redirect to home
+        toast.success("Welcome back!");
         navigate({ to: "/" });
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Login failed");
+        const errorMessage =
+          err instanceof Error ? err.message : "Login failed";
+        setError(errorMessage);
+        toast.error(errorMessage);
       } finally {
         setIsLoading(false);
       }
@@ -49,20 +51,11 @@ function LoginPage({ className }: LoginPageProps) {
   });
 
   return (
-    <div
-      className={cn(
-        "h-screen bg-background flex items-center justify-center px-4",
-        className
-      )}
-    >
+    <PageContainer centered className={className}>
       <Card className="w-full max-w-sm p-8 space-y-6">
         <h1 className="text-2xl font-bold text-center">Sign In</h1>
 
-        {error && (
-          <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20">
-            <p className="text-sm text-destructive text-center">{error}</p>
-          </div>
-        )}
+        {error && <ErrorAlert message={error} />}
 
         <form
           onSubmit={(e) => {
@@ -84,7 +77,7 @@ function LoginPage({ className }: LoginPageProps) {
             }}
           >
             {(field) => (
-              <div className="space-y-1.5">
+              <FormField error={field.state.meta.errors?.[0]}>
                 <Input
                   type="email"
                   placeholder="Email"
@@ -93,12 +86,7 @@ function LoginPage({ className }: LoginPageProps) {
                   onChange={(e) => field.handleChange(e.target.value)}
                   disabled={isLoading}
                 />
-                {field.state.meta.errors && (
-                  <p className="text-xs text-destructive">
-                    {field.state.meta.errors[0]}
-                  </p>
-                )}
-              </div>
+              </FormField>
             )}
           </form.Field>
 
@@ -114,7 +102,7 @@ function LoginPage({ className }: LoginPageProps) {
             }}
           >
             {(field) => (
-              <div className="space-y-1.5">
+              <FormField error={field.state.meta.errors?.[0]}>
                 <Input
                   type="password"
                   placeholder="Password"
@@ -123,12 +111,7 @@ function LoginPage({ className }: LoginPageProps) {
                   onChange={(e) => field.handleChange(e.target.value)}
                   disabled={isLoading}
                 />
-                {field.state.meta.errors && (
-                  <p className="text-xs text-destructive">
-                    {field.state.meta.errors[0]}
-                  </p>
-                )}
-              </div>
+              </FormField>
             )}
           </form.Field>
 
@@ -149,7 +132,7 @@ function LoginPage({ className }: LoginPageProps) {
           </Link>
         </p>
       </Card>
-    </div>
+    </PageContainer>
   );
 }
 

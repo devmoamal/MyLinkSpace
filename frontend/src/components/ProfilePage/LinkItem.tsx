@@ -4,6 +4,8 @@ import type { Link } from "@mylinkspace/shared";
 import Button from "@/components/common/Button";
 import Card from "@/components/common/Card";
 import Input from "@/components/common/Input";
+import IconSelector from "./IconSelector";
+import LinkTypeSelector from "./LinkTypeSelector";
 import { GripVertical, Pencil, Trash2, Eye, EyeOff } from "lucide-react";
 import { LINK_ICON_MAP, type LinkIconType } from "@/constants/link";
 import { LINK_TYPES } from "@mylinkspace/shared";
@@ -84,20 +86,7 @@ function LinkItem({
           placeholder="Title"
         />
 
-        {/* Type Selector */}
-        <select
-          value={type}
-          onChange={(e) =>
-            setType(e.target.value as (typeof LINK_TYPES)[number])
-          }
-          className="w-full px-4 py-2 rounded-xl bg-secondary border-2 border-muted text-text outline-none focus:border-primary transition-colors"
-        >
-          {LINK_TYPES.map((linkType) => (
-            <option key={linkType} value={linkType}>
-              {linkType}
-            </option>
-          ))}
-        </select>
+        <LinkTypeSelector value={type} onChange={setType} />
 
         <Input
           value={url}
@@ -105,18 +94,8 @@ function LinkItem({
           placeholder="URL"
         />
 
-        {/* Icon Selector */}
-        <select
-          value={icon}
-          onChange={(e) => setIcon(e.target.value as LinkIconType)}
-          className="w-full px-4 py-2 rounded-xl bg-secondary border-2 border-muted text-text outline-none focus:border-primary transition-colors"
-        >
-          {Object.keys(LINK_ICON_MAP).map((iconName) => (
-            <option key={iconName} value={iconName}>
-              {iconName}
-            </option>
-          ))}
-        </select>
+        <IconSelector value={icon} onChange={setIcon} />
+
         <div className="flex gap-2">
           <Button
             onClick={handleUpdate}

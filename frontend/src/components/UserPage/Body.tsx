@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
 import Avatar from "../common/Avatar";
-import defaultAvatar from "@/assets/images/avatar.png";
 import type { PublicUser } from "@mylinkspace/shared";
 import VerifiedBadge from "../VerifiedBadge";
 import LinkList from "./LinkList";
+import { User as UserIcon } from "lucide-react";
 
 type BodyProps = {
   user: PublicUser;
@@ -25,13 +25,19 @@ function Body({ user, className }: BodyProps) {
       {/* Profile Section */}
       <div className="flex flex-col items-center text-center gap-6">
         <div className="relative">
-          <Avatar
-            size="xl"
-            src={user.avatar_image_url || defaultAvatar}
-            alt={user.name}
-            fallback={user.name}
-            className="shadow-purple-glow"
-          />
+          {user.avatar_image_url ? (
+            <Avatar
+              size="xl"
+              src={user.avatar_image_url}
+              alt={user.name}
+              fallback={user.name}
+              className="shadow-purple-glow"
+            />
+          ) : (
+            <div className="h-32 w-32 rounded-full bg-primary/10 flex items-center justify-center shadow-purple-glow">
+              <UserIcon size={64} className="text-primary" />
+            </div>
+          )}
         </div>
 
         <div className="space-y-1">
@@ -45,6 +51,7 @@ function Body({ user, className }: BodyProps) {
           </div>
 
           <p className="text-primary font-medium">@{user.username}</p>
+          <p className="text-text">{user.bio}</p>
         </div>
 
         {/* Links Count or Bio placeholder */}

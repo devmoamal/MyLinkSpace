@@ -28,10 +28,10 @@ function Navbar({ className, showAuth = true }: NavbarProps) {
     !location.pathname.startsWith("/profile");
 
   return (
-    <nav className="w-full p-4">
+    <nav className="static top-0 w-full p-4 ">
       <Card
         className={cn(
-          "flex justify-between items-center max-w-6xl mx-auto px-6 py-3 border-none",
+          "flex justify-between items-center max-w-6xl mx-auto px-6 py-3 ",
           className
         )}
       >

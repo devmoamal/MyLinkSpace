@@ -1,12 +1,15 @@
-import { cn } from "@/lib/utils";
+import PageContainer from "@/components/common/PageContainer";
 import { Link, useNavigate } from "@tanstack/react-router";
 import Button from "@/components/common/Button";
 import Card from "@/components/common/Card";
 import Input from "@/components/common/Input";
+import ErrorAlert from "@/components/common/ErrorAlert";
+import FormField from "@/components/common/FormField";
 import { useForm } from "@tanstack/react-form";
 import { authApi } from "@/lib/auth";
 import useAuth from "@/hooks/useAuth";
 import { useState } from "react";
+import { toast } from "sonner";
 
 type RegisterPageProps = {
   className?: string;
@@ -14,11 +17,9 @@ type RegisterPageProps = {
 
 function RegisterPage({ className }: RegisterPageProps) {
   const navigate = useNavigate();
-  const { setAuth } = useAuth();
+  const { setAuth, isAuthenticated } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  const { isAuthenticated } = useAuth();
 
   if (isAuthenticated) {
     navigate({ to: "/profile" });
@@ -37,14 +38,14 @@ function RegisterPage({ className }: RegisterPageProps) {
         setIsLoading(true);
 
         const response = await authApi.register(value);
-
-        // Store auth data
         setAuth(response.data.user, response.data.token);
-
-        // Redirect to home
+        toast.success("Account created successfully!");
         navigate({ to: "/" });
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Registration failed");
+        const errorMessage =
+          err instanceof Error ? err.message : "Registration failed";
+        setError(errorMessage);
+        toast.error(errorMessage);
       } finally {
         setIsLoading(false);
       }
@@ -52,20 +53,11 @@ function RegisterPage({ className }: RegisterPageProps) {
   });
 
   return (
-    <div
-      className={cn(
-        "h-screen bg-background flex items-center justify-center px-4",
-        className
-      )}
-    >
+    <PageContainer centered className={className}>
       <Card className="w-full max-w-sm p-8 space-y-6">
         <h1 className="text-2xl font-bold text-center">Create Account</h1>
 
-        {error && (
-          <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20">
-            <p className="text-sm text-destructive text-center">{error}</p>
-          </div>
-        )}
+        {error && <ErrorAlert message={error} />}
 
         <form
           onSubmit={(e) => {
@@ -87,7 +79,7 @@ function RegisterPage({ className }: RegisterPageProps) {
             }}
           >
             {(field) => (
-              <div className="space-y-1.5">
+              <FormField error={field.state.meta.errors?.[0]}>
                 <Input
                   type="text"
                   placeholder="Full Name"
@@ -96,12 +88,7 @@ function RegisterPage({ className }: RegisterPageProps) {
                   onChange={(e) => field.handleChange(e.target.value)}
                   disabled={isLoading}
                 />
-                {field.state.meta.errors && (
-                  <p className="text-xs text-destructive">
-                    {field.state.meta.errors[0]}
-                  </p>
-                )}
-              </div>
+              </FormField>
             )}
           </form.Field>
 
@@ -114,12 +101,12 @@ function RegisterPage({ className }: RegisterPageProps) {
                   : value.length < 3
                   ? "Too short"
                   : !/^[a-zA-Z0-9_]+$/.test(value)
-                  ? "Letters, numbers, _ only"
+                  ? "Only letters, numbers, and underscores allowed"
                   : undefined,
             }}
           >
             {(field) => (
-              <div className="space-y-1.5">
+              <FormField error={field.state.meta.errors?.[0]}>
                 <Input
                   type="text"
                   placeholder="Username"
@@ -128,12 +115,7 @@ function RegisterPage({ className }: RegisterPageProps) {
                   onChange={(e) => field.handleChange(e.target.value)}
                   disabled={isLoading}
                 />
-                {field.state.meta.errors && (
-                  <p className="text-xs text-destructive">
-                    {field.state.meta.errors[0]}
-                  </p>
-                )}
-              </div>
+              </FormField>
             )}
           </form.Field>
 
@@ -149,7 +131,7 @@ function RegisterPage({ className }: RegisterPageProps) {
             }}
           >
             {(field) => (
-              <div className="space-y-1.5">
+              <FormField error={field.state.meta.errors?.[0]}>
                 <Input
                   type="email"
                   placeholder="Email"
@@ -158,12 +140,7 @@ function RegisterPage({ className }: RegisterPageProps) {
                   onChange={(e) => field.handleChange(e.target.value)}
                   disabled={isLoading}
                 />
-                {field.state.meta.errors && (
-                  <p className="text-xs text-destructive">
-                    {field.state.meta.errors[0]}
-                  </p>
-                )}
-              </div>
+              </FormField>
             )}
           </form.Field>
 
@@ -179,7 +156,7 @@ function RegisterPage({ className }: RegisterPageProps) {
             }}
           >
             {(field) => (
-              <div className="space-y-1.5">
+              <FormField error={field.state.meta.errors?.[0]}>
                 <Input
                   type="password"
                   placeholder="Password"
@@ -188,12 +165,7 @@ function RegisterPage({ className }: RegisterPageProps) {
                   onChange={(e) => field.handleChange(e.target.value)}
                   disabled={isLoading}
                 />
-                {field.state.meta.errors && (
-                  <p className="text-xs text-destructive">
-                    {field.state.meta.errors[0]}
-                  </p>
-                )}
-              </div>
+              </FormField>
             )}
           </form.Field>
 
@@ -214,7 +186,7 @@ function RegisterPage({ className }: RegisterPageProps) {
           </Link>
         </p>
       </Card>
-    </div>
+    </PageContainer>
   );
 }
 
