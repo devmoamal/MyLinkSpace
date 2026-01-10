@@ -3,6 +3,7 @@ import { Outlet, createRootRoute, useLocation } from "@tanstack/react-router";
 import useTheme from "@/hooks/useTheme";
 import { useEffect } from "react";
 import Navbar from "@/components/layout/Navbar";
+import { Toaster } from "sonner";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -29,6 +30,7 @@ function RootComponent() {
 
   return (
     <React.Fragment>
+      <Toaster position="top-center" richColors theme={theme} />
       <div className={theme}>
         {!hideNavbar && <Navbar />}
         <Outlet />
