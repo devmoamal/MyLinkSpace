@@ -12,8 +12,8 @@ export const baseLinkSchema = z.object({
   url: z.url("Must be a valid URL"),
   type: z.enum(LINK_TYPES), // Will be validated by constants
   icon: z.enum(LINK_ICONS), // Will be validated by constants
-  position: z.number().min(0), // position should be non-negative
-  is_active: z.boolean().default(true),
+  position: z.number().optional(), // position should be non-negative
+  is_active: z.boolean(),
   created_at: z.date(),
   updated_at: z.date(),
 });
@@ -30,7 +30,6 @@ export const linkSchema = baseLinkSchema.extend({
 export const createLinkSchema = baseLinkSchema.omit({
   id: true,
   user_id: true,
-  position: true,
   is_active: true,
   created_at: true,
   updated_at: true,
