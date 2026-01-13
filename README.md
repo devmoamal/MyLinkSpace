@@ -8,11 +8,15 @@ Simple and lightweight self-hosted link in bio sites like
 
 **[📸 View more screenshots →](./demo)**
 
-## Run App
+## Installation
 
 ```bash
+git clone https://github.com/yourusername/mylinkspace.git
+cd mylinkspace
+
+
 bun install
-bun run init // initial sqlite db and .env file
+bun run init
 bun run dev
 ```
 
