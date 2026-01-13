@@ -11,8 +11,8 @@ Simple and lightweight self-hosted link in bio sites like
 ## Installation
 
 ```bash
-git clone https://github.com/yourusername/mylinkspace.git
-cd mylinkspace
+git clone https://github.com/devmoamal/MyLinkSpace.git
+cd MyLinkSpace
 
 
 bun install
